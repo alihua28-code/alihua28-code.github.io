@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KAS Clubs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  /* --- General Styling --- */
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    background-color: #fafafa;
+  }
+
+  /* --- Navbar Styling --- */
+  .navbar {
+    background-color: #333;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center; 
+  }
+  
+  .navbar a, .dropbtn {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .navbar-logo { padding: 5px 15px; }
+  .navbar-logo img { height: 40px; vertical-align: middle; }
+  .navbar a:hover, .dropdown:hover .dropbtn { background-color: #B30000; }
+
+  /* Dropdown container */
+  .dropdown { position: relative; }
+  
+  /* Main Menu */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    top: 100%;
+    left: 0;
+    z-index: 10000;
+  }
+  
+  .dropdown:hover .dropdown-content { display: block; }
+
+  /* Submenu */
+  .submenu { position: relative; }
+  .submenu a { color: black; text-align: left; display: block; padding: 12px 16px; font-weight: normal;}
+  .submenu:hover { background-color: #ddd; color: black;} 
+  
+  .submenu-content {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background-color: white;
+    min-width: 220px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 10001;
+  }
+  .submenu:hover .submenu-content { display: block; }
+
+  /* --- Search Bar Styling --- */
+  .search-container {
+    margin-left: auto; 
+    padding-right: 20px;
+  }
+
+  .search-container input {
+    padding: 8px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    width: 200px;
+    transition: width 0.4s ease-in-out;
+  }
+
+  .search-container input:focus {
+    width: 250px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  }
+
+  /* --- Page Content --- */
+  .main-title {
+    text-align: center;
+    font-family: 'Georgia', serif;
+    font-size: 50px;
+    color: #333;
+    margin: 40px 0 20px 0;
+  }
+
+  /* --- IMAGE FADER --- */
+  .image-fader {
+    width: 100%;
+    max-width: 1000px;
+    height: 350px;
+    position: relative; 
+    margin: 0 auto 50px auto;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #ddd;
+    z-index: 1; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  .image-fader img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    object-fit: cover;
+    opacity: 0; 
+    animation-name: imagefade;
+    animation-timing-function: ease-in-out; 
+    animation-iteration-count: infinite;
+    animation-duration: 16s; 
+  }
+
+  @keyframes imagefade {
+    0% { opacity: 1; } 
+    20% { opacity: 1; } 
+    25% { opacity: 0; } 
+    95% { opacity: 0; } 
+    100% { opacity: 1; }
+  }
+
+  .image-fader img:nth-of-type(1) { animation-delay: 12s; }
+  .image-fader img:nth-of-type(2) { animation-delay: 8s; }
+  .image-fader img:nth-of-type(3) { animation-delay: 4s; }
+  .image-fader img:nth-of-type(4) { animation-delay: 0s; }
+
+  /* --- Club Category Headers --- */
+  .category-header {
+    background-color: #222; 
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 28px;
+    font-family: 'Georgia', serif;
+    margin: 0;
+  }
+
+  /* --- THE GRID LAYOUT --- */
+  .club-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px; 
+    padding: 40px 10%; 
+  }
+
+  .club-section {
+    padding: 30px;
+    border-radius: 15px; 
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.05); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .club-section:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0px 15px 25px rgba(0,0,0,0.15); 
+    z-index: 10;
+  }
+
+  .club-name {
+    font-size: 30px; 
+    font-family: 'Arial Black', sans-serif;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+  }
+
+  .club-desc {
+    font-size: 17px;
+    color: #444;
+    line-height: 1.6;
+    font-family: 'Chalkboard SE', sans-serif; 
+    flex-grow: 1; 
+    margin-bottom: 20px;
+  }
+
+  .club-section a img {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 10px;
+  }
+
+  .club-section a img:hover {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  h4 {
+    color: #555;
+    font-family: sans-serif;
+    margin: 0;
+    padding-top: 15px;
+    border-top: 2px dashed rgba(0,0,0,0.15); 
+  }
+
+  /* --- Scroll Fade-In Animation --- */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .crosshair { cursor: crosshair; }
+
+  /* Mobile responsiveness for search bar */
+  @media screen and (max-width: 600px) {
+    .search-container input {
+      width: 120px;
+    }
+    .search-container input:focus {
+      width: 150px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="#" class="navbar-logo">
+    <img src="image/kas logo.png" alt="KAS Logo">
+  </a>
+  <a href="#">Home</a>
+
+<div class="Handbook">
+  <a href="https://docs.google.com/document/d/14RZheUn5qX9bfL7Gxy4Dz79rEKlRUnZ5GMHB5-OEgk0/edit?tab=t.0">Handbook</a>
+</div>
+  
+  <div class="dropdown">
+    <button class="dropbtn">Select a Club ▼</button>
+    <div class="dropdown-content">
+      
+      <div class="submenu">
+        <a href="#athletics">Athletics ▸</a>
+        <div class="submenu-content">
+           <a href="#fitness">Fitness Club</a>
+           <a href="#triathlon">Triathlon Club</a>
+           <a href="#frisbee">Ultimate Frisbee</a>
+        </div>
+      </div>
+
+      <div class="submenu">
+        <a href="#arts">Arts & Media ▸</a>
+        <div class="submenu-content">
+          <a href="#charrette">Charrette Club</a>
+          <a href="#charityart">Charity Art Club</a>
+          <a href="#crescendo">Crescendo Club</a>
+          <a href="#fashion">Fashion Club</a>
+          <a href="#film">Film Club</a>
+          <a href="#kasper">KASPER Newspaper</a>
+          <a href="#makers">Makers Club</a>
+          <a href="#orchestra">Orchestra</a>
+          <a href="#podcast">Podcast Club</a>
+          <a href="#streetart">Street Art Club</a>
+          <a href="#thespian">Thespian Society</a>
+        </div>
+      </div>
+
+      <div class="submenu">
+        <a href="#service">Service ▸</a>
+        <div class="submenu-content">
+          <a href="#communityed">Community Education</a>
+          <a href="#deij">DEIJ Club</a>
+          <a href="#fooddonation">Food Donation</a>
+          <a href="#green">Green Everywhere</a>
+          <a href="#interact">Interact (Rotary)</a>
+          <a href="#redcross">Red Cross</a>
+          <a href="#spectrum">Spectrum (GSA)</a>
+          <a href="#zonta">Zonta Club</a>
+        </div>
+      </div>
+
+      <div class="submenu">
+        <a href="#leadership">Leadership ▸</a>
+        <div class="submenu-content">
+          <a href="#athleticcouncil">Athletic Council</a>
+          <a href="#connections">Connections Club</a>
+          <a href="#house">House Committee</a>
+          <a href="#mun">Model UN</a>
+          <a href="#nhs">National Honor Society</a>
+          <a href="#studentcouncil">Student Council</a>
+        </div>
+      </div>
+
+      <div class="submenu">
+        <a href="#hobbies">Hobbies ▸</a>
+        <div class="submenu-content">
+          <a href="#acm">Animation (ACM)</a>
+          <a href="#baking">Baking Club</a>
+          <a href="#book">Book Club</a>
+          <a href="#chess">Chess Club</a>
+          <a href="#cosplay">Cosplay Club</a>
+          <a href="#magic">Magic Club</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="clubSearch" placeholder="🔍  Search clubs...">
+  </div>
+
+</div>
+
+<h1 class="main-title fade-in">Welcome to Kaohsiung American School Clubs</h1>
+
+<div class="image-fader fade-in">
+    <img src="image/sport_club.jpg" alt="Sport">
+    <img src="image/baking_club.jpeg" alt="Baking">
+    <img src="image/theater_club.jpeg" alt="Theater">
+    <img src="image/wsc_club.jpeg" alt="WSC">
+</div>
+
+<div class="crosshair"></div>
+
+<h2 id="athletics" class="category-header fade-in">Athletics & Wellness</h2>
+<div class="club-grid">
+
+    <div id="fitness" class="club-section fade-in" style="background-color: #fff0f0;">
+        <h3 class="club-name" style="color: #333;">Fitness Club🏋️‍♂️</h3>
+        <p class="club-desc">Focus on physical health, gym safety, and building strength. We provide a safe environment to learn proper lifting techniques.</p>
+        <div>
+            <h4>🗓️: Every Monday</h4>
+        </div>
+    </div>
+
+    <div id="triathlon" class="club-section fade-in" style="background-color: #ffe6e6;">
+        <h3 class="club-name" style="color: #333;">Triathlon Club🏊‍♂️🚴🏃</h3>
+        <p class="club-desc">Swim, Bike, Run. Join us for morning training sessions and prepare for competitions.</p>
+        <div>
+            <a href="https://www.instagram.com/kastriathlonclub/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 6 of lunch time</h4>
+        </div>
+    </div>
+
+    <div id="frisbee" class="club-section fade-in" style="background-color: #fff0f0;">
+        <h3 class="club-name" style="color: #333;">Ultimate Frisbee. ݁₊ ⊹🥏˖. ݁</h3>
+        <p class="club-desc">A team sport that combines speed, skill, cooperation and spirit of the game. If you join and play competitions, you can get a free frisbee!</p>
+        <div>
+            <a href="#"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every Thursday afterschool</h4>
+        </div>
+    </div>
+
+</div>
+
+<h2 id="arts" class="category-header fade-in">Arts & Media</h2>
+<div class="club-grid">
+
+    <div id="charrette" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Charrette Club✍🎨</h3>
+        <p class="club-desc">Dive into the world of design and architecture. We work on creative projects and model building.</p>
+        <div>
+            <a href="https://www.instagram.com/charrette.club/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: During Break time</h4>
+        </div>
+    </div>
+
+    <div id="charityart" class="club-section fade-in" style="background-color: #e6f2ff;">
+        <h3 class="club-name" style="color:#0059b3;">Charity Art Club✍⊹₊⟡⋆🎨🖌️⋆⟡₊</h3>
+        <p class="club-desc">Use your artistic talents to raise money and awareness for important causes.</p>
+        <div>
+            <a href="https://www.instagram.com/kas.charity.art/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Day 6 lunch</h4>
+        </div>
+    </div>
+
+    <div id="crescendo" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Crescendo Club‧₊˚♪𝄞₊˚⊹🎵🎻</h3>
+        <p class="club-desc">Share the joy of music through performance and appreciation.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_crescendo_club/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every Friday afterschool</h4>
+        </div>
+    </div>
+
+    <div id="fashion" class="club-section fade-in" style="background-color: #e6f2ff;">
+        <h3 class="club-name" style="color:#0059b3;">Fashion Club🥼👗</h3>
+        <p class="club-desc">Explore clothing design, sewing, and the latest trends in the fashion world.</p>
+        <div>
+            <a href="https://www.instagram.com/kas.fashion.club/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Twice day 1 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="film" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Film Club🎥</h3>
+        <p class="club-desc">Watch, analyze, and create short films. Perfect for aspiring directors and editors.</p>
+        <div>
+            <a href="https://www.instagram.com/filmclub.kas/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 6 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="kasper" class="club-section fade-in" style="background-color: #e6f2ff;">
+        <h3 class="club-name" style="color:#0059b3;">KASPER Newspaper📰</h3>
+        <p class="club-desc">The official student voice of KAS. Write articles, take photos, and design layouts.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_newspaper/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 3 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="makers" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Makers Club</h3>
+        <p class="club-desc">Hands-on engineering and design. Build, tinker, and create with various tools.</p>
+    </div>
+
+    <div id="orchestra" class="club-section fade-in" style="background-color: #e6f2ff;">
+        <h3 class="club-name" style="color:#0059b3;">Orchestra 𝄞♫⋆｡♪₊˚🎻</h3>
+        <p class="club-desc">Classical music performance group for string and wind instruments.</p>
+    </div>
+
+    <div id="podcast" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Podcast Club🎤︎︎🎧</h3>
+        <p class="club-desc">Record and edit audio stories, interviews, and discussions on topics you love.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_newspaper/"><img src="image/instagram.png" height="50px"></a>
+        </div>
+    </div> 
+
+    <div id="streetart" class="club-section fade-in" style="background-color: #e6f2ff;">
+        <h3 class="club-name" style="color:#0059b3;">Street Art Club</h3>
+        <p class="club-desc">Explore urban art styles, murals, and public artistic expression.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_sac/"><img src="image/instagram.png" height="50px"></a>
+        </div>
+    </div>
+
+    <div id="thespian" class="club-section fade-in" style="background-color: #f0f8ff;">
+        <h3 class="club-name" style="color:#004080;">Thespian Society</h3>
+        <p class="club-desc">For students dedicated to theater arts, acting, and stage production.</p>
+        <div>
+            <a href="https://www.instagram.com/kasthespiansociety?igsh=MXZoaDR6ZGV3YmNxYw%3D%3D"><img src="image/instagram.png" height="50px"></a>
+        </div>
+    </div>
+
+</div>
+
+<h2 id="service" class="category-header fade-in">Service & Advocacy</h2>
+<div class="club-grid">
+
+    <div id="communityed" class="club-section fade-in" style="background-color: #f0fff0;">
+        <h3 class="club-name" style="color:#006400;">Community Education👩🏻‍🏫👨🏻‍🏫📚</h3>
+        <p class="club-desc">Teaching and tutoring local students to support educational equity.</p>
+        <div>
+            <a href="https://www.instagram.com/kas.ceclub/"><img src="image/instagram.png" height="50px"></a>
+        </div>
+    </div>
+
+    <div id="deij" class="club-section fade-in" style="background-color: #e6fffa;">
+        <h3 class="club-name" style="color:#004d40;">DEIJ Club</h3>
+        <p class="club-desc">Promoting Diversity, Equity, Inclusion, and Justice within our school community.</p>
+        <div>
+            <h4>🗓️: Tuesday</h4>
+        </div>
+    </div>
+
+    <div id="fooddonation" class="club-section fade-in" style="background-color: #f0fff0;">
+        <h3 class="club-name" style="color:#006400;">Food Donation⟡𓌉◯𓇋₊˚⊹♡</h3>
+        <p class="club-desc">Collecting and distributing food to support local shelters and families in need.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_fooddonation/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 3 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="green" class="club-section fade-in" style="background-color: #e6fffa;">
+        <h3 class="club-name" style="color:#004d40;">Green Everywhere𖦹🍀୭ ˚. ᵎᵎ｡𖦹°‧</h3>
+        <p class="club-desc">Environmental activism and sustainability projects to keep our planet green.</p>
+        <div>
+            <a href="https://www.instagram.com/kasgreeneverywhere/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 4 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="interact" class="club-section fade-in" style="background-color: #f0fff0;">
+        <h3 class="club-name" style="color:#006400;">Interact (Rotary)</h3>
+        <p class="club-desc">Community service and global citizenship sponsored by the Rotary Club.</p>
+        <div>
+            <a href="https://www.instagram.com/kasinteractclub/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 5 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="redcross" class="club-section fade-in" style="background-color: #e6fffa;">
+        <h3 class="club-name" style="color:#004d40;">Red Cross</h3>
+        <p class="club-desc">Humanitarian aid, health safety awareness, and emergency preparedness training.</p>
+        <div>
+            <a href="https://www.instagram.com/kasredcross/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 2 and 7 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="spectrum" class="club-section fade-in" style="background-color: #f0fff0;">
+        <h3 class="club-name" style="color:#006400;">Spectrum (GSA)🏳️‍🌈</h3>
+        <p class="club-desc">A safe space for LGBTQ+ students and allies to socialize and advocate.</p>
+        <div>
+            <a href="https://www.instagram.com/spectrum.kas/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 3 and 7 break time</h4>
+        </div>
+    </div>
+
+    <div id="zonta" class="club-section fade-in" style="background-color: #e6fffa;">
+        <h3 class="club-name" style="color:#004d40;">Zonta Club</h3>
+        <p class="club-desc">Advocating for the rights and well-being of women and girls worldwide.</p>
+        <div>
+            <a href="https://www.instagram.com/kaszontaclub/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day but not day 6 lunch time</h4>
+        </div>
+    </div>
+
+</div>
+
+<h2 id="leadership" class="category-header fade-in">Leadership</h2>
+<div class="club-grid">
+
+    <div id="athleticcouncil" class="club-section fade-in" style="background-color: #f3e5f5;">
+        <h3 class="club-name" style="color:#4a148c;">Athletic Council🏃🏃‍♀️</h3>
+        <p class="club-desc">Organizing sports events and promoting school spirit through athletics.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_athletic_council/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 2 and 7 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="connections" class="club-section fade-in" style="background-color: #ede7f6;">
+        <h3 class="club-name" style="color:#311b92;">Connections Club</h3>
+        <p class="club-desc">Welcoming new students and building a strong, inclusive school community.</p>
+        <div>
+            <h4>🗓️: Every day 7 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="house" class="club-section fade-in" style="background-color: #f3e5f5;">
+        <h3 class="club-name" style="color:#4a148c;">House Committee🔴🟡🟢🔵</h3>
+        <p class="club-desc">Leading House competitions and spirit days to energize the student body.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_house_committee/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 1 and 2 lunch time</h4> 
+        </div>
+    </div>
+
+    <div id="mun" class="club-section fade-in" style="background-color: #ede7f6;">
+        <h3 class="club-name" style="color:#311b92;">Model UN🗣️💬</h3>
+        <p class="club-desc">Debating global issues and representing nations in simulated UN conferences.</p>
+        <div>
+            <h4>🗓️: Every Monday afterschool</h4>
+        </div>
+    </div>
+
+    <div id="nhs" class="club-section fade-in" style="background-color: #f3e5f5;">
+        <h3 class="club-name" style="color:#4a148c;">National Honor Society</h3>
+        <p class="club-desc">Recognizing students for scholarship, service, leadership, and character.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_bridge_nhs/"><img src="image/instagram.png" height="50px"></a>
+        </div>
+    </div>
+
+    <div id="studentcouncil" class="club-section fade-in" style="background-color: #ede7f6;">
+        <h3 class="club-name" style="color:#311b92;">Student Council</h3>
+        <p class="club-desc">The governing body representing student interests and organizing school-wide events.</p>
+        <div>
+            <a href="https://www.instagram.com/kasstuco/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 1 and 5 lunch time</h4>
+        </div>
+    </div>
+
+</div>
+
+<h2 id="hobbies" class="category-header fade-in">Hobbies & Interests</h2>
+<div class="club-grid">
+
+    <div id="acm" class="club-section fade-in" style="background-color: #fffaf0;">
+        <h3 class="club-name" style="color:#d2691e;">Animation (ACM)𓆉𓆟 𓆞 𓆝 𓆟𓇼</h3>
+        <p class="club-desc">Watch, discuss, and draw Anime, Comics, and Manga with fellow fans.</p>
+    </div>
+
+    <div id="baking" class="club-section fade-in" style="background-color: #fff8e1;">
+        <h3 class="club-name" style="color:#f57f17;">Baking Club 𐙚🍪 ˚🍰 ⋆｡˚ ᡣ𐭩</h3>
+        <p class="club-desc">The sweetest club on campus! Learn to bake cookies, cakes, and pastries.</p>
+        <div>
+            <a href="https://www.instagram.com/kas_bakingclub/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 2 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="book" class="club-section fade-in" style="background-color: #fffaf0;">
+        <h3 class="club-name" style="color:#d2691e;">Book Club📚📖</h3>
+        <p class="club-desc">Read fascinating books and engage in deep discussions with fellow readers.</p>
+        <div>
+            <h4>🗓️: Every day 4 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="chess" class="club-section fade-in" style="background-color: #fff8e1;">
+        <h3 class="club-name" style="color:#f57f17;">Chess Club♔♚</h3>
+        <p class="club-desc">Sharpen your mind and compete in strategy games. Beginners welcome!</p>
+        <div>
+            <h4>🗓️: Every Monday afterschool</h4>
+        </div>
+    </div>
+
+    <div id="cosplay" class="club-section fade-in" style="background-color: #fffaf0;">
+        <h3 class="club-name" style="color:#d2691e;">Cosplay Club</h3>
+        <p class="club-desc">Design costumes and dress up as your favorite characters from pop culture.</p>
+        <div>
+            <a href="https://www.instagram.com/kascosplayclub/"><img src="image/instagram.png" height="50px"></a>
+            <h4>🗓️: Every day 5 lunch time</h4>
+        </div>
+    </div>
+
+    <div id="magic" class="club-section fade-in" style="background-color: #fff8e1;">
+        <h3 class="club-name" style="color:#f57f17;">Magic Club🪄</h3>
+        <p class="club-desc">Learn sleight of hand, card tricks, and illusions to amaze your friends.</p>
+        <div>
+            <h4>🗓️: Every day 3 lunch time</h4>
+        </div>
+    </div>
+
+</div>
+
+<script>
+  // 1. Scroll Fade-In Animation
+  document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const hiddenElements = document.querySelectorAll('.fade-in');
+    hiddenElements.forEach((el) => observer.observe(el));
+  });
+
+  // 2. Live Search Bar Functionality
+  document.getElementById('clubSearch').addEventListener('keyup', function() {
+    let searchQuery = this.value.toLowerCase();
+    let clubs = document.querySelectorAll('.club-section');
+
+    clubs.forEach(function(club) {
+      let clubName = club.querySelector('.club-name').innerText.toLowerCase();
+      let clubDesc = club.querySelector('.club-desc').innerText.toLowerCase();
+      
+      // If the search text is in the name or description, show it. Otherwise, hide it.
+      if (clubName.includes(searchQuery) || clubDesc.includes(searchQuery)) {
+        club.style.display = 'flex'; 
+      } else {
+        club.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
