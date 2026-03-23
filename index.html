@@ -676,33 +676,37 @@
 </div>
 
 <script>
-// fade in on scroll
-let fadeItems = document.querySelectorAll(".fade-in");
+  // 1. Scroll Fade-In Animation
+  document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
 
-window.addEventListener("scroll", () => {
-  fadeItems.forEach(item => {
-    let top = item.getBoundingClientRect().top;
-    if (top < window.innerHeight - 50) {
-      item.classList.add("visible");
-    }
+    const hiddenElements = document.querySelectorAll('.fade-in');
+    hiddenElements.forEach((el) => observer.observe(el));
   });
-});
 
-// search functionality
-let search = document.getElementById("clubSearch");
-search.addEventListener("keyup", () => {
-  let value = search.value.toLowerCase();
-  let cards = document.querySelectorAll(".club-section");
+  // 2. Live Search Bar Functionality
+  document.getElementById('clubSearch').addEventListener('keyup', function() {
+    let searchQuery = this.value.toLowerCase();
+    let clubs = document.querySelectorAll('.club-section');
 
-  cards.forEach(card => {
-    let text = card.innerText.toLowerCase();
-    if (text.includes(value)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
+    clubs.forEach(function(club) {
+      let clubName = club.querySelector('.club-name').innerText.toLowerCase();
+      let clubDesc = club.querySelector('.club-desc').innerText.toLowerCase();
+      
+      // If the search text is in the name or description, show it. Otherwise, hide it.
+      if (clubName.includes(searchQuery) || clubDesc.includes(searchQuery)) {
+        club.style.display = 'flex'; 
+      } else {
+        club.style.display = 'none';
+      }
+    });
   });
-});
 </script>
 
 </body>
