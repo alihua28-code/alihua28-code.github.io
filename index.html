@@ -5,239 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-  /* --- General Styling --- */
-  body {
-    font-family: sans-serif;
-    margin: 0;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    background-color: #fafafa;
-  }
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #fafafa;
+}
 
-  /* --- Navbar Styling --- */
-  .navbar {
-    background-color: #333;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center; 
-  }
-  
-  .navbar a, .dropbtn {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+/* navbar */
+.navbar {
+  background: #333;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+}
 
-  .navbar-logo { padding: 5px 15px; }
-  .navbar-logo img { height: 40px; vertical-align: middle; }
-  .navbar a:hover, .dropdown:hover .dropbtn { background-color: #B30000; }
+.navbar a {
+  color: white;
+  padding: 12px 14px;
+  text-decoration: none;
+}
 
-  /* Dropdown container */
-  .dropdown { position: relative; }
-  
-  /* Main Menu */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 200px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    top: 100%;
-    left: 0;
-    z-index: 10000;
-  }
-  
-  .dropdown:hover .dropdown-content { display: block; }
+.navbar a:hover {
+  background: #B30000;
+}
 
-  /* Submenu */
-  .submenu { position: relative; }
-  .submenu a { color: black; text-align: left; display: block; padding: 12px 16px; font-weight: normal;}
-  .submenu:hover { background-color: #ddd; color: black;} 
-  
-  .submenu-content {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: 0;
-    background-color: white;
-    min-width: 220px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    z-index: 10001;
-  }
-  .submenu:hover .submenu-content { display: block; }
+/* dropdown */
+.dropdown {
+  position: relative;
+}
 
-  /* --- Search Bar Styling --- */
-  .search-container {
-    margin-left: auto; 
-    padding-right: 20px;
-  }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  min-width: 180px;
+}
 
-  .search-container input {
-    padding: 8px 15px;
-    font-size: 16px;
-    border: none;
-    border-radius: 20px;
-    outline: none;
-    width: 200px;
-    transition: width 0.4s ease-in-out;
-  }
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 
-  .search-container input:focus {
-    width: 250px;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  }
+/* club cards */
+.club-card {
+  padding: 20px;
+  margin: 15px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
 
-  /* --- Page Content --- */
-  .main-title {
-    text-align: center;
-    font-family: 'Georgia', serif;
-    font-size: 50px;
-    color: #333;
-    margin: 40px 0 20px 0;
-  }
+.club-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
 
-  /* --- IMAGE FADER --- */
-  .image-fader {
-    width: 100%;
-    max-width: 1000px;
-    height: 350px;
-    position: relative; 
-    margin: 0 auto 50px auto;
-    overflow: hidden;
-    border-radius: 10px;
-    background-color: #ddd;
-    z-index: 1; 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  }
+.club-text {
+  font-size: 15px;
+  color: #444;
+}
 
-  .image-fader img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 130%;
-    object-fit: cover;
-    opacity: 0; 
-    animation-name: imagefade;
-    animation-timing-function: ease-in-out; 
-    animation-iteration-count: infinite;
-    animation-duration: 16s; 
-  }
+/* simple grid */
+.club-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  padding: 30px;
+}
 
-  @keyframes imagefade {
-    0% { opacity: 1; } 
-    20% { opacity: 1; } 
-    25% { opacity: 0; } 
-    95% { opacity: 0; } 
-    100% { opacity: 1; }
-  }
+/* fade in (simplified) */
+.fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.6s;
+}
 
-  .image-fader img:nth-of-type(1) { animation-delay: 12s; }
-  .image-fader img:nth-of-type(2) { animation-delay: 8s; }
-  .image-fader img:nth-of-type(3) { animation-delay: 4s; }
-  .image-fader img:nth-of-type(4) { animation-delay: 0s; }
-
-  /* --- Club Category Headers --- */
-  .category-header {
-    background-color: #222; 
-    color: white;
-    text-align: center;
-    padding: 15px;
-    font-size: 28px;
-    font-family: 'Georgia', serif;
-    margin: 0;
-  }
-
-  /* --- THE GRID LAYOUT --- */
-  .club-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px; 
-    padding: 40px 10%; 
-  }
-
-  .club-section {
-    padding: 30px;
-    border-radius: 15px; 
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.05); 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column; 
-    position: relative;
-    border: 1px solid rgba(0,0,0,0.05);
-  }
-
-  .club-section:hover {
-    transform: translateY(-8px); 
-    box-shadow: 0px 15px 25px rgba(0,0,0,0.15); 
-    z-index: 10;
-  }
-
-  .club-name {
-    font-size: 30px; 
-    font-family: 'Arial Black', sans-serif;
-    margin: 0 0 15px 0;
-    text-transform: uppercase;
-  }
-
-  .club-desc {
-    font-size: 17px;
-    color: #444;
-    line-height: 1.6;
-    font-family: 'Chalkboard SE', sans-serif; 
-    flex-grow: 1; 
-    margin-bottom: 20px;
-  }
-
-  .club-section a img {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-bottom: 10px;
-  }
-
-  .club-section a img:hover {
-    transform: scale(1.15) rotate(5deg);
-  }
-
-  h4 {
-    color: #555;
-    font-family: sans-serif;
-    margin: 0;
-    padding-top: 15px;
-    border-top: 2px dashed rgba(0,0,0,0.15); 
-  }
-
-  /* --- Scroll Fade-In Animation --- */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .crosshair { cursor: crosshair; }
-
-  /* Mobile responsiveness for search bar */
-  @media screen and (max-width: 600px) {
-    .search-container input {
-      width: 120px;
-    }
-    .search-container input:focus {
-      width: 150px;
-    }
-  }
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 </head>
 <body>
@@ -479,7 +324,7 @@
     </div>
 
     <div id="deij" class="club-section fade-in" style="background-color: #e6fffa;">
-        <h3 class="club-name" style="color:#004d40;">DEIJ Clu🧕🧑‍🦼⚖️🧑‍⚖️👭👩🏾‍❤️‍👨🏻👬</h3>
+        <h3 class="club-name" style="color:#004d40;">DEIJ Club🧕🧑‍🦼⚖️🧑‍⚖️👭👩🏾‍❤️‍👨🏻👬</h3>
         <p class="club-desc">Promoting Diversity, Equity, Inclusion, and Justice within our school community.</p>
         <div>
             <h4>🗓️: Tuesday</h4>
@@ -676,37 +521,34 @@
 </div>
 
 <script>
-  // 1. Scroll Fade-In Animation
-  document.addEventListener("DOMContentLoaded", function() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
+// fade in when scrolling
+let items = document.querySelectorAll(".fade");
 
-    const hiddenElements = document.querySelectorAll('.fade-in');
-    hiddenElements.forEach((el) => observer.observe(el));
+window.addEventListener("scroll", () => {
+  items.forEach(item => {
+    let top = item.getBoundingClientRect().top;
+    if (top < window.innerHeight - 50) {
+      item.classList.add("show");
+    }
   });
+});
 
-  // 2. Live Search Bar Functionality
-  document.getElementById('clubSearch').addEventListener('keyup', function() {
-    let searchQuery = this.value.toLowerCase();
-    let clubs = document.querySelectorAll('.club-section');
+// search
+let search = document.getElementById("clubSearch");
 
-    clubs.forEach(function(club) {
-      let clubName = club.querySelector('.club-name').innerText.toLowerCase();
-      let clubDesc = club.querySelector('.club-desc').innerText.toLowerCase();
-      
-      // If the search text is in the name or description, show it. Otherwise, hide it.
-      if (clubName.includes(searchQuery) || clubDesc.includes(searchQuery)) {
-        club.style.display = 'flex'; 
-      } else {
-        club.style.display = 'none';
-      }
-    });
+search.addEventListener("keyup", () => {
+  let value = search.value.toLowerCase();
+  let cards = document.querySelectorAll(".club-card");
+
+  cards.forEach(card => {
+    let text = card.innerText.toLowerCase();
+    if (text.includes(value)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
   });
+});
 </script>
 
 </body>
